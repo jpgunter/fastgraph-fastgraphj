@@ -8,4 +8,8 @@ public class FastGraphCompliler {
         return null;
     }
 
+    private static <T> GraphNode<T> compileNaive(List<FastGraphEntry> entries, FastGraphConfig config){
+        return null;
+    }
+
 }

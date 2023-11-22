@@ -1,6 +1,10 @@
 package org.fastgraph;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -9,7 +13,29 @@ import org.apache.commons.lang3.Validate;
 public class FastGraphCompliler<T> {
 
     public FastGraph<T> compile(List<FastGraphEntry<T>> entries, FastGraphConfig fastGraphConfig) {
+        List<String> evalOrder = fastGraphConfig.getAttributeEvaluationOrder();
+
+        Map<String, Integer>[] attributeValues = (Map<String, Integer>[]) evalOrder.stream()
+                .map(v -> new HashMap<String, Integer>())
+                .collect(Collectors.toList())
+                .toArray();
+        String[] attributeIndexes = (String[]) evalOrder.toArray();
+        AtomicInteger nextValueIndex = new AtomicInteger(0);
+        Map<T, Integer> valueToIndex = entries.stream()
+                .map(FastGraphEntry::getValue)
+                .collect(Collectors.toMap(Function.identity(), e -> nextValueIndex.getAndIncrement()));
+        T[] values = (T[]) entries.stream()
+                .map(FastGraphEntry::getValue)
+                .toArray();
+
+        entries.stream()
+                .map(FastGraphEntry::getAttributes)
+                .forEach(m -> addToValues(m, attributeValues, attributeIndexes));
         return null;
+    }
+
+    private void addToValues(Map<String, String> m, Map<String, Integer>[] attributeValues, String[] attributeIndexes) {
+
     }
 
     public GraphNode<T> compileNaive(List<FastGraphEntry<T>> entries, FastGraphConfig config) {

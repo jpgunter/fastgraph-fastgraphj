@@ -19,4 +19,20 @@ public class GraphNode<T> {
         Stream.of(newChildren)
             .forEach(child -> this.children.put(child.getAttributeValue(), child));
     }
+
+    public GraphNode<T> getChild(AttributeValue attributeValue) {
+        return children.get(attributeValue);
+    }
+
+    public boolean hasChild(AttributeValue attributeValue) {
+        return children.containsKey(attributeValue);
+    }
+
+    public boolean isLeaf() {
+        return children.isEmpty();
+    }
+
+    public GraphNode<T> withValue(AttributeValue attributeValue) {
+        return new GraphNode<>(attributeValue, attribute, value);
+    }
 }

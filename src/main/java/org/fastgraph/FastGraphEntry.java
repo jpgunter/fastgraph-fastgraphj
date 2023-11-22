@@ -10,4 +10,8 @@ import lombok.Value;
 public class FastGraphEntry<T> {
     private final Map<String, String> attributes;
     private final T value;
+
+    public Map<String, String> getAttributes(){
+        return this.attributes;
+    }
 }

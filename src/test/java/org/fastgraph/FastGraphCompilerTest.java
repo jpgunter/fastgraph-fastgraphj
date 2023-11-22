@@ -26,7 +26,7 @@ public class FastGraphCompilerTest {
                 .attributeEvaluationOrder(ImmutableList.of("color", "size"))
                 .build();
 
-        GraphNode<BigDecimal> root = FastGraphCompliler.compileNaive(entries, config);
+        GraphNode<BigDecimal> root = new FastGraphCompliler<BigDecimal>().compileNaive(entries, config);
 
         BigDecimal price = root.getChild(AttributeValue.ofWild())
                 .getChild(AttributeValue.ofWild())

@@ -8,15 +8,15 @@ import org.apache.commons.lang3.Validate;
 
 public class FastGraphCompliler<T> {
 
-    public static <T> FastGraph<T> compile(List<FastGraphEntry<T>> entries, FastGraphConfig fastGraphConfig) {
+    public FastGraph<T> compile(List<FastGraphEntry<T>> entries, FastGraphConfig fastGraphConfig) {
         return null;
     }
 
-    public static <T> GraphNode<T> compileNaive(List<FastGraphEntry<T>> entries, FastGraphConfig config) {
+    public GraphNode<T> compileNaive(List<FastGraphEntry<T>> entries, FastGraphConfig config) {
         Validate.notEmpty(config.getAttributeEvaluationOrder(), "Evalution order must be defined and not empty");
         GraphNode<T> root = new GraphNode<T>(AttributeValue.ofWild(), null, null);
         List<GraphNode<T>> wildCardPath = config.getAttributeEvaluationOrder().stream()
-            .map(attribute -> (GraphNode<T>) attributeWildcard(attribute))
+            .map(this::attributeWildcard)
             .collect(Collectors.toList());
 
         for (int i = 0; i < wildCardPath.size()-1; i++) {
@@ -32,7 +32,7 @@ public class FastGraphCompliler<T> {
     }
 
     @VisibleForTesting
-    private static <T> void insertIntoGraph(FastGraphEntry<T> entry, GraphNode<T> root, FastGraphConfig config) {
+    private void insertIntoGraph(FastGraphEntry<T> entry, GraphNode<T> root, FastGraphConfig config) {
         GraphNode<T> currentNode = root.getChild(AttributeValue.ofWild());
         for (int i = 0; i < config.getAttributeEvaluationOrder().size() - 1; i++) {
             String currentAttribute = config.getAttributeEvaluationOrder().get(i);
@@ -63,7 +63,7 @@ public class FastGraphCompliler<T> {
         currentNode.addChildren(new GraphNode<>(attributeValue, null, entry.getValue()));
     }
 
-    private static <T> GraphNode<T> attributeWildcard(String attribute) {
-        return new GraphNode<T>(AttributeValue.ofWild(), attribute, null);
+    private GraphNode<T> attributeWildcard(String attribute) {
+        return new GraphNode<>(AttributeValue.ofWild(), attribute, null);
     }
 }
